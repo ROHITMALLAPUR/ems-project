@@ -14,11 +14,11 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String Name;
+    private String name;
     private String email;
-    private String Department;
+    private String department;
     private long salary;
-    private LocalDate DateofJoining;
+    private LocalDate dateofJoining;
     private Role role;
     private Status status;
 
@@ -31,19 +31,19 @@ public class Employee {
     }
 
     public String getName() {
-        return this.Name;
+        return this.name;
     }
 
     public void setName(String name) {
-        this.Name = name;
+        this.name = name;
     }
 
     public String getDepartment() {
-        return this.Department;
+        return this.department;
     }
 
     public void setDepartment(String department) {
-        this.Department = department;
+        this.department = department;
     }
 
     public String getEmail() {
@@ -63,11 +63,11 @@ public class Employee {
     }
 
     public LocalDate getDateofJoining() {
-        return this.DateofJoining;
+        return this.dateofJoining;
     }
 
     public void setDateofJoining(LocalDate dateofJoining) {
-        this.DateofJoining = dateofJoining;
+        this.dateofJoining = dateofJoining;
     }
 
     public Role getRole() {

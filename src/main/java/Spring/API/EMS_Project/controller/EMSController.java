@@ -3,14 +3,18 @@ package Spring.API.EMS_Project.controller;
 
 
 import Spring.API.EMS_Project.entity.Employee;
+import Spring.API.EMS_Project.services.EMSServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/Employee-DB")
+@RequestMapping("/Employee_Details")
 public class EMSController {
 
+    @Autowired
+    private EMSServices emsServices;
 
     @GetMapping
     public List<Employee> getAll() {
@@ -19,7 +23,7 @@ public class EMSController {
 
     @PostMapping
     public boolean createEmployee(@RequestBody Employee employeeEntry) {
-
+        emsServices.saveEmployee(employeeEntry);
         return true;
     }
 
