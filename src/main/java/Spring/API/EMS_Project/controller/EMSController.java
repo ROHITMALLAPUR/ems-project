@@ -5,6 +5,7 @@ package Spring.API.EMS_Project.controller;
 import Spring.API.EMS_Project.entity.Employee;
 import Spring.API.EMS_Project.services.EMSServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,10 +17,6 @@ public class EMSController {
     @Autowired
     private EMSServices emsServices;
 
-    @GetMapping
-    public List<Employee> getAll() {
-        return null;
-    }
 
     @PostMapping
     public boolean createEmployee(@RequestBody Employee employeeEntry) {
@@ -27,19 +24,27 @@ public class EMSController {
         return true;
     }
 
-    @GetMapping({"/Id/{myId}"})
+    @GetMapping
+    public List<Employee> getAll() {
+        return emsServices.getAll();
+    }
+
+
+    @GetMapping({"id/{myId}"})
     public Employee getEmployeeById(@PathVariable Long myId) {
-        return  null;
+        return  emsServices.getById(myId).orElse(null);
     }
 
-    @DeleteMapping({"/Id/{myId}"})
-    public Employee deleteEmployeeById(@PathVariable Long myId) {
-        return null;
+    @DeleteMapping({"id/{myId}"})
+    public boolean deleteEmployeeById(@PathVariable Long myId) {
+        emsServices.deleteById(myId);
+        return true;
     }
 
-    @PutMapping({"/Id/{myId}"})
-    public Employee updateEmployeeById(@PathVariable Long myId, @RequestBody Employee employeeEntry) {
-        return null;
+    @PutMapping({"id/{myId}"})
+    public ResponseEntity<Employee> updateEmployeeById(@PathVariable Long myId, @RequestBody Employee employeeEntry) {
+        Employee updatedEmployee=emsServices.updateById(myId,employeeEntry);
+        return ResponseEntity.ok(updatedEmployee);
     }
 }
 
