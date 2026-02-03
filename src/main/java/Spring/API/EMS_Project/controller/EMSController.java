@@ -2,6 +2,8 @@ package Spring.API.EMS_Project.controller;
 
 
 
+import Spring.API.EMS_Project.dto.EmployeeRequestDTO;
+import Spring.API.EMS_Project.dto.EmployeeResponseDTO;
 import Spring.API.EMS_Project.entity.Employee;
 import Spring.API.EMS_Project.services.EMSServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,10 @@ public class EMSController {
 
 
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employeeEntry) {
-        try{emsServices.saveEmployee(employeeEntry);
-            return new ResponseEntity<>(employeeEntry,HttpStatus.CREATED);
+    public ResponseEntity<EmployeeResponseDTO> createEmployee(@RequestBody EmployeeRequestDTO employeeEntry) {
+        try{
+            EmployeeResponseDTO responseDTO= emsServices.saveEmployee(employeeEntry);
+            return new ResponseEntity<>(responseDTO,HttpStatus.CREATED);
         }
         catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

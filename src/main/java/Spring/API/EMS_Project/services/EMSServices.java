@@ -1,5 +1,7 @@
 package Spring.API.EMS_Project.services;
 
+import Spring.API.EMS_Project.dto.EmployeeRequestDTO;
+import Spring.API.EMS_Project.dto.EmployeeResponseDTO;
 import Spring.API.EMS_Project.entity.Employee;
 import Spring.API.EMS_Project.repository.EMSRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +13,37 @@ import java.util.Optional;
 @Service
 public class EMSServices {
 
+    private Employee mapToEntity(EmployeeRequestDTO dto){
+        Employee emp=new Employee();
+        emp.setName(dto.getName());
+        emp.setEmail(dto.getEmail());
+        emp.setDepartment(dto.getDepartment());
+        emp.setSalary(dto.getSalary());
+        emp.setRole(dto.getRole());
+        emp.setStatus(dto.getStatus());
+        return emp;
+    }
+
+    private EmployeeResponseDTO mapToResponse(Employee emp){
+        return new EmployeeResponseDTO(
+                emp.getId(),
+                emp.getName(),
+                emp.getEmail(),
+                emp.getDepartment(),
+                emp.getSalary(),
+                emp.getDateofJoining(),
+                emp.getRole(),
+                emp.getStatus()
+        );
+    }
+
     @Autowired
     private EMSRepository emsRepository;
 
-    public void saveEmployee(Employee employee){
-        emsRepository.save(employee);
+    public EmployeeResponseDTO saveEmployee(EmployeeRequestDTO employeeReqdto){
+        Employee emp= mapToEntity(employeeReqdto);
+        Employee employee=emsRepository.save(emp);
+        return mapToResponse(employee);
     }
 
     public List<Employee> getAll(){
