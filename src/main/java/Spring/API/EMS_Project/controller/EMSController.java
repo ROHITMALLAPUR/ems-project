@@ -34,21 +34,14 @@ public class EMSController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
-        List<Employee> allEmpList= emsServices.getAll();
-        if(allEmpList!=null && !allEmpList.isEmpty()){
-            return new ResponseEntity<>(allEmpList,HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<List<EmployeeResponseDTO>> getAll() {
+        return ResponseEntity.ok(emsServices.getAll());
     }
 
 
     @GetMapping({"id/{myId}"})
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long myId) {
-       Optional<Employee> emp= emsServices.getById(myId);
-        return emp.map(employee -> new ResponseEntity<>(employee, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<EmployeeResponseDTO> getEmployeeById(@PathVariable Long myId) {
+        return ResponseEntity.ok(emsServices.getById(myId));
     }
 
     @DeleteMapping({"id/{myId}"})

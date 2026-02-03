@@ -46,12 +46,14 @@ public class EMSServices {
         return mapToResponse(employee);
     }
 
-    public List<Employee> getAll(){
-        return emsRepository.findAll();
+    public List<EmployeeResponseDTO> getAll(){
+        return emsRepository.findAll().stream().map(this::mapToResponse).toList();
+
     }
 
-    public Optional<Employee> getById(Long id){
-        return emsRepository.findById(id);
+    public EmployeeResponseDTO getById(Long id){
+        Employee emp=emsRepository.findById(id).orElse(null);
+        return mapToResponse(emp);
     }
 
     public void deleteById(Long id){
