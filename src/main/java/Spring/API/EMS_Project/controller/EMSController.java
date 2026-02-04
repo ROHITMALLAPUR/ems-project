@@ -51,8 +51,8 @@ public class EMSController {
     }
 
     @PutMapping({"id/{myId}"})
-    public ResponseEntity<Employee> updateEmployeeById(@PathVariable Long myId, @RequestBody Employee employeeEntry) {
-        Employee updatedEmployee=emsServices.updateById(myId,employeeEntry);
+    public ResponseEntity<EmployeeResponseDTO> updateEmployeeById(@PathVariable Long myId, @RequestBody EmployeeRequestDTO employeeEntryDTO) {
+        EmployeeResponseDTO updatedEmployee=emsServices.updateById(myId,employeeEntryDTO);
         return new ResponseEntity<>(updatedEmployee,HttpStatus.OK);
     }
 }

@@ -60,17 +60,19 @@ public class EMSServices {
         emsRepository.deleteById(id);
     }
 
-    public Employee updateById(Long id, Employee updatedEmployee){
+    public EmployeeResponseDTO updateById(Long id, EmployeeRequestDTO updatedEmployee){
         Employee existingEmployee= emsRepository.findById(id).orElse(null);
         if(existingEmployee!=null){
             existingEmployee.setName(updatedEmployee.getName());
             existingEmployee.setEmail(updatedEmployee.getEmail());
             existingEmployee.setDepartment(updatedEmployee.getDepartment());
             existingEmployee.setSalary(updatedEmployee.getSalary());
+            existingEmployee.setRole(updatedEmployee.getRole());
+            existingEmployee.setStatus(updatedEmployee.getStatus());
         }
-        emsRepository.save(existingEmployee);
+        Employee updatedData=emsRepository.save(existingEmployee);
 
-        return existingEmployee;
+        return mapToResponse(updatedData);
     }
 
 }
