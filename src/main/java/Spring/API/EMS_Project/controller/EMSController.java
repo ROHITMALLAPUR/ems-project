@@ -45,7 +45,7 @@ public class EMSController {
     }
 
     @DeleteMapping({"id/{myId}"})
-    public ResponseEntity<?> deleteEmployeeById(@PathVariable Long myId) {
+    public ResponseEntity<Void> deleteEmployeeById(@PathVariable Long myId) {
         emsServices.deleteById(myId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

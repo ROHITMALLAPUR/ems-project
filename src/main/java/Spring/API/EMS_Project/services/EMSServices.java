@@ -57,7 +57,8 @@ public class EMSServices {
     }
 
     public void deleteById(Long id){
-        emsRepository.deleteById(id);
+        Employee emp=emsRepository.findById(id).orElse(null);
+        emsRepository.delete(emp);
     }
 
     public EmployeeResponseDTO updateById(Long id, EmployeeRequestDTO updatedEmployee){
