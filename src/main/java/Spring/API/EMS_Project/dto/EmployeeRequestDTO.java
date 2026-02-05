@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +21,22 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class EmployeeRequestDTO {
 
+   @NotBlank
+   @Size(min = 3,max = 50)
     private String name;
+
+   @Email
+   @NotBlank
     private String email;
+
+   @NotBlank
     private String department;
+
+   @NotNull
+   @Min(1000)
     private long salary;
+
+
     private LocalDate dateofJoining;
     private Role role;
     private Status status;

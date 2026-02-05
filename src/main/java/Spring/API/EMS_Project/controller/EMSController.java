@@ -6,6 +6,7 @@ import Spring.API.EMS_Project.dto.EmployeeRequestDTO;
 import Spring.API.EMS_Project.dto.EmployeeResponseDTO;
 import Spring.API.EMS_Project.entity.Employee;
 import Spring.API.EMS_Project.services.EMSServices;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class EMSController {
 
 
     @PostMapping
-    public ResponseEntity<EmployeeResponseDTO> createEmployee(@RequestBody EmployeeRequestDTO employeeEntry) {
+    public ResponseEntity<EmployeeResponseDTO> createEmployee(@Valid @RequestBody EmployeeRequestDTO employeeEntry) {
         try{
             EmployeeResponseDTO responseDTO= emsServices.saveEmployee(employeeEntry);
             return new ResponseEntity<>(responseDTO,HttpStatus.CREATED);
@@ -51,7 +52,7 @@ public class EMSController {
     }
 
     @PutMapping({"id/{myId}"})
-    public ResponseEntity<EmployeeResponseDTO> updateEmployeeById(@PathVariable Long myId, @RequestBody EmployeeRequestDTO employeeEntryDTO) {
+    public ResponseEntity<EmployeeResponseDTO> updateEmployeeById( @PathVariable Long myId,@Valid @RequestBody EmployeeRequestDTO employeeEntryDTO) {
         EmployeeResponseDTO updatedEmployee=emsServices.updateById(myId,employeeEntryDTO);
         return new ResponseEntity<>(updatedEmployee,HttpStatus.OK);
     }
