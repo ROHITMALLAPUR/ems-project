@@ -3,10 +3,14 @@ package Spring.API.EMS_Project.services;
 import Spring.API.EMS_Project.dto.EmployeeRequestDTO;
 import Spring.API.EMS_Project.dto.EmployeeResponseDTO;
 import Spring.API.EMS_Project.entity.Employee;
+import Spring.API.EMS_Project.entity.Role;
+import Spring.API.EMS_Project.entity.Status;
 import Spring.API.EMS_Project.repository.EMSRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +23,9 @@ public class EMSServices {
         emp.setEmail(dto.getEmail());
         emp.setDepartment(dto.getDepartment());
         emp.setSalary(dto.getSalary());
-        emp.setRole(dto.getRole());
-        emp.setStatus(dto.getStatus());
+        emp.setRole(Role.EMPLOYEE);
+        emp.setStatus(Status.ACTIVE);
+        emp.setDateofJoining(LocalDate.now());
         return emp;
     }
 
@@ -68,8 +73,6 @@ public class EMSServices {
             existingEmployee.setEmail(updatedEmployee.getEmail());
             existingEmployee.setDepartment(updatedEmployee.getDepartment());
             existingEmployee.setSalary(updatedEmployee.getSalary());
-            existingEmployee.setRole(updatedEmployee.getRole());
-            existingEmployee.setStatus(updatedEmployee.getStatus());
         }
         Employee updatedData=emsRepository.save(existingEmployee);
 

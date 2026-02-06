@@ -36,8 +36,6 @@ public class EmployeeRequestDTO {
    @Min(1000)
     private long salary;
 
-
     private LocalDate dateofJoining;
-    private Role role;
-    private Status status;
+
 }
