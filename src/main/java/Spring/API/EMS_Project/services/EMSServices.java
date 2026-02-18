@@ -5,6 +5,7 @@ import Spring.API.EMS_Project.dto.EmployeeResponseDTO;
 import Spring.API.EMS_Project.entity.Employee;
 import Spring.API.EMS_Project.entity.Role;
 import Spring.API.EMS_Project.entity.Status;
+import Spring.API.EMS_Project.exception.ResourceNotFoundException;
 import Spring.API.EMS_Project.repository.EMSRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,17 +58,17 @@ public class EMSServices {
     }
 
     public EmployeeResponseDTO getById(Long id){
-        Employee emp=emsRepository.findById(id).orElse(null);
+        Employee emp=emsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee Not found with id: " + id ));
         return mapToResponse(emp);
     }
 
     public void deleteById(Long id){
-        Employee emp=emsRepository.findById(id).orElse(null);
+        Employee emp=emsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee Not found with id: " + id ));
         emsRepository.delete(emp);
     }
 
     public EmployeeResponseDTO updateById(Long id, EmployeeRequestDTO updatedEmployee){
-        Employee existingEmployee= emsRepository.findById(id).orElse(null);
+        Employee existingEmployee= emsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee Not found with id: " + id ));
         if(existingEmployee!=null){
             existingEmployee.setName(updatedEmployee.getName());
             existingEmployee.setEmail(updatedEmployee.getEmail());
