@@ -1,11 +1,13 @@
 package Spring.API.EMS_Project.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,18 +15,29 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex){
-        Map<String,String> errors= new HashMap<>();
+    public ResponseEntity<ApiError> handleValidationErrors(MethodArgumentNotValidException ex, HttpServletRequest request){
+        Map<String,String> FieldeErrors= new HashMap<>();
 
-        ex.getBindingResult().getFieldErrors().forEach(error->errors.put(error.getField(), error.getDefaultMessage()));
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        ex.getBindingResult().getFieldErrors().forEach(error->FieldeErrors.put(error.getField(), error.getDefaultMessage()));
+
+        ApiError apiError=new ApiError();
+        apiError.setTimestamp(LocalDateTime.now());
+        apiError.setStatus(HttpStatus.BAD_REQUEST.value());
+        apiError.setMessage("Validation Failed");
+        apiError.setErrors(FieldeErrors);
+        apiError.setPath(request.getRequestURI());
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String,String>> handleResourceNotFound(ResourceNotFoundException ex){
-        Map<String,String> error=new HashMap<>();
-        error.put("message", ex.getMessage());
+    public ResponseEntity<ApiError> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request){
 
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        ApiError apiError=new ApiError();
+        apiError.setTimestamp(LocalDateTime.now());
+        apiError.setStatus(HttpStatus.NOT_FOUND.value());
+        apiError.setMessage(ex.getMessage());
+        apiError.setPath(request.getRequestURI());
+
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 }
