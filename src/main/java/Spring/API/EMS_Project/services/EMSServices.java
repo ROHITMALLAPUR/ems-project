@@ -99,11 +99,53 @@ public class EMSServices {
     }
 
 
-    public Page<EmployeeResponseDTO> getEmployeewithPaginationandSorting(int page, int pageSize, String sortBy, String direction){
+    public Page<EmployeeResponseDTO> getEmployeewithPaginationandSorting(
+            String department,
+            Double minSalary,
+            Double maxSalary,
+            Role role,
+            String search,
+            Status status,
+            int page,
+            int pageSize,
+            String sortBy,
+            String direction)
+    {
 
         Sort sort=direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable=PageRequest.of(page,pageSize,sort);
-        Page<Employee> employeePage= emsRepository.findAll(pageable);
+        Page<Employee> employeePage;
+
+        boolean hasSearch=search!=null && !search.isBlank();
+        boolean hasDepartment=department != null && !department.isBlank();
+        boolean hasSalary=minSalary!=null && maxSalary!=null;
+        boolean hasRole=role!=null;
+        boolean hasStatus=status!=null;
+
+
+        if(hasSearch){
+            employeePage=emsRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search,search,pageable);
+        }
+
+        else if (hasDepartment && hasSalary && hasRole && hasStatus){
+            employeePage=emsRepository.findByDepartmentIgnoreCaseAndSalaryBetweenAndRoleAndStatus(department,minSalary,maxSalary,role,status,pageable);
+        }
+        else if(hasDepartment){
+            employeePage=emsRepository.findByDepartmentIgnoreCase(department,pageable);
+        }
+        else if (hasSalary){
+            employeePage=emsRepository.findBySalaryBetween(minSalary,maxSalary,pageable);
+        }
+        else if(hasRole){
+            employeePage=emsRepository.findByRole(role,pageable);
+        }
+        else if(hasStatus){
+            employeePage=emsRepository.findByStatus(status,pageable);
+        }
+        else{
+            employeePage=emsRepository.findAll(pageable);
+        }
+
         return employeePage.map(this::maptoDTO);
     }
 }
