@@ -2,12 +2,14 @@ package Spring.API.EMS_Project.controller;
 
 
 
+import Spring.API.EMS_Project.dto.EmployeePageResponseDTO;
 import Spring.API.EMS_Project.dto.EmployeeRequestDTO;
 import Spring.API.EMS_Project.dto.EmployeeResponseDTO;
 import Spring.API.EMS_Project.entity.Employee;
 import Spring.API.EMS_Project.services.EMSServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +36,7 @@ public class EMSController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<EmployeeResponseDTO>> getAll() {
         return ResponseEntity.ok(emsServices.getAll());
     }
@@ -56,5 +58,28 @@ public class EMSController {
         EmployeeResponseDTO updatedEmployee=emsServices.updateById(myId,employeeEntryDTO);
         return new ResponseEntity<>(updatedEmployee,HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity<EmployeePageResponseDTO> getEmployees(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction){
+
+        Page<EmployeeResponseDTO> employeePage=emsServices.getEmployeewithPaginationandSorting(page,size,sortBy,direction);
+
+        EmployeePageResponseDTO response=new EmployeePageResponseDTO();
+        response.setContent(employeePage.getContent());
+        response.setPageNumber(employeePage.getNumber());
+        response.setPageSize(employeePage.getSize());
+        response.setTotalElements(employeePage.getTotalElements());
+        response.setTotalPages(employeePage.getTotalPages());
+        response.setLast(employeePage.isLast());
+
+        return ResponseEntity.ok(response);
+    }
+
+
+
 }
 

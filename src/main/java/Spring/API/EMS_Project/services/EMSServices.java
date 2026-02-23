@@ -1,5 +1,6 @@
 package Spring.API.EMS_Project.services;
 
+import Spring.API.EMS_Project.dto.EmployeePageResponseDTO;
 import Spring.API.EMS_Project.dto.EmployeeRequestDTO;
 import Spring.API.EMS_Project.dto.EmployeeResponseDTO;
 import Spring.API.EMS_Project.entity.Employee;
@@ -8,6 +9,10 @@ import Spring.API.EMS_Project.entity.Status;
 import Spring.API.EMS_Project.exception.ResourceNotFoundException;
 import Spring.API.EMS_Project.repository.EMSRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -41,6 +46,19 @@ public class EMSServices {
                 emp.getRole(),
                 emp.getStatus()
         );
+    }
+
+    private EmployeeResponseDTO maptoDTO(Employee employee){
+        EmployeeResponseDTO dto=new EmployeeResponseDTO();
+        dto.setId(employee.getId());
+        dto.setName(employee.getName());
+        dto.setEmail(employee.getEmail());
+        dto.setDepartment(employee.getDepartment());
+        dto.setSalary(employee.getSalary());
+        dto.setRole(employee.getRole());
+        dto.setStatus(employee.getStatus());
+        dto.setDateofJoining(employee.getDateofJoining());
+        return dto;
     }
 
     @Autowired
@@ -80,4 +98,12 @@ public class EMSServices {
         return mapToResponse(updatedData);
     }
 
+
+    public Page<EmployeeResponseDTO> getEmployeewithPaginationandSorting(int page, int pageSize, String sortBy, String direction){
+
+        Sort sort=direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable=PageRequest.of(page,pageSize,sort);
+        Page<Employee> employeePage= emsRepository.findAll(pageable);
+        return employeePage.map(this::maptoDTO);
+    }
 }
