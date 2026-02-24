@@ -9,6 +9,8 @@ import Spring.API.EMS_Project.entity.Employee;
 import Spring.API.EMS_Project.entity.Role;
 import Spring.API.EMS_Project.entity.Status;
 import Spring.API.EMS_Project.services.EMSServices;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@Tag(name = "Employee APIs", description = "operations related to employees")
 @RestController
 @RequestMapping("/Employee_Details")
 public class EMSController {
@@ -63,15 +66,34 @@ public class EMSController {
 
     @GetMapping
     public ResponseEntity<EmployeePageResponseDTO> getEmployees(
+            @Parameter(description = "Department name (optional)")
             @RequestParam(required = false) String department,
+
+            @Parameter(description = "Minimum Salary")
             @RequestParam(required = false ) Double minSalary,
+
+            @Parameter(description = "Maximum Salary")
             @RequestParam(required = false ) Double maxSalary,
+
+            @Parameter(description = "Employee Role(Employee/Admin)")
             @RequestParam(required = false) Role role,
+
+            @Parameter(description = "Employee Status(Active/Inactive)")
             @RequestParam(required = false) Status status,
+
+            @Parameter(description = "Search By name or email")
             @RequestParam(required = false) String search,
+
+            @Parameter(description = "Page number (default=0)")
             @RequestParam(defaultValue = "0") int page,
+
+            @Parameter(description = "Page size (default=5)")
             @RequestParam(defaultValue = "5") int size,
+
+            @Parameter(description = "sort field")
             @RequestParam(defaultValue = "id") String sortBy,
+
+            @Parameter(description = "Sort direction(asc/desc)")
             @RequestParam(defaultValue = "asc") String direction){
 
         Page<EmployeeResponseDTO> employeePage=emsServices.getEmployeewithPaginationandSorting(department,minSalary,maxSalary,role,search,status,page,size,sortBy,direction);
