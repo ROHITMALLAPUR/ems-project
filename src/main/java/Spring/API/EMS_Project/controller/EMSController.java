@@ -30,7 +30,7 @@ public class EMSController {
     private EMSServices emsServices;
 
 
-    @PostMapping
+    @PostMapping("/Create")
     public ResponseEntity<EmployeeResponseDTO> createEmployee(@Valid @RequestBody EmployeeRequestDTO employeeEntry) {
         try{
             EmployeeResponseDTO responseDTO= emsServices.saveEmployee(employeeEntry);
