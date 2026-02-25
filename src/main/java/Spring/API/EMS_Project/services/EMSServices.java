@@ -8,6 +8,8 @@ import Spring.API.EMS_Project.entity.Role;
 import Spring.API.EMS_Project.entity.Status;
 import Spring.API.EMS_Project.exception.ResourceNotFoundException;
 import Spring.API.EMS_Project.repository.EMSRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,8 @@ import java.util.Optional;
 
 @Service
 public class EMSServices {
+
+    private static final Logger logger=LoggerFactory.getLogger(EMSServices.class);
 
     private Employee mapToEntity(EmployeeRequestDTO dto){
         Employee emp=new Employee();
@@ -65,8 +69,10 @@ public class EMSServices {
     private EMSRepository emsRepository;
 
     public EmployeeResponseDTO saveEmployee(EmployeeRequestDTO employeeReqdto){
+        logger.info("Creating Employee with email : {}", employeeReqdto.getEmail());
         Employee emp= mapToEntity(employeeReqdto);
         Employee employee=emsRepository.save(emp);
+        logger.info("Created Employee with ID : {}", employee.getId());
         return mapToResponse(employee);
     }
 
@@ -76,16 +82,19 @@ public class EMSServices {
     }
 
     public EmployeeResponseDTO getById(Long id){
+        logger.info("Fetching Employee with id : {}", id);
         Employee emp=emsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee Not found with id: " + id ));
         return mapToResponse(emp);
     }
 
     public void deleteById(Long id){
+        logger.info("Deleting Employee with id : {}", id);
         Employee emp=emsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee Not found with id: " + id ));
         emsRepository.delete(emp);
     }
 
     public EmployeeResponseDTO updateById(Long id, EmployeeRequestDTO updatedEmployee){
+        logger.info("Updating Employee with id : {}", id);
         Employee existingEmployee= emsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee Not found with id: " + id ));
         if(existingEmployee!=null){
             existingEmployee.setName(updatedEmployee.getName());
